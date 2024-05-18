@@ -6,9 +6,8 @@ const app = express();
 const rateLimiter = require('./common/rate-limiter');
 const DBManager = require('./common/db-manager');
 const router = require('./routes');
-const cors = require('cors');
-app.use(cors('*'));
-DBManager.connectToMongo();
+DBManager.connectToMongo().catch(() => {
+});
 
 app.use(express.json());
 app.use(rateLimiter);

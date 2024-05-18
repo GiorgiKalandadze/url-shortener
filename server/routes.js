@@ -4,6 +4,20 @@ const Joi = require('joi');
 const config = require('./common/config');
 const DBManager = require('./common/db-manager');
 const crypto = require('crypto');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('js-yaml');
+const fs = require('fs');
+const path = require('path');
+const swaggerDocument = YAML.load(
+    fs.readFileSync(path.join(__dirname, './swagger.yaml'), 'utf8'),
+);
+
+router.use(
+    '/swagger-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument),
+);
+
 
 router.get('/', (req, res) => {
     res.send('Welcome to the URL shortener service');
@@ -51,7 +65,6 @@ router.get('/:code',
         {
             const document = await DBManager.getDocument(config.MONGO_DATABASE, config.MONGO_COLLECTION_URL, {shortURL});
             if (document) {
-                console.log(document.originalUrl);
                 res.status(302).redirect(document.originalUrl);
             } else {
                 res.status(404).send('Not found');
