@@ -1,0 +1,53 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: 'URL Shortener Service'
+paths:
+  /:
+    get:
+      summary: 'Welcome message'
+      responses:
+        '200':
+          description: 'Welcome to the URL shortener service'
+  /v1/shortURL:
+    post:
+      summary: 'Create a short URL'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          description: 'URL to be shortened'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              originalUrl:
+                type: 'string'
+                format: 'uri'
+      responses:
+        '201':
+          description: 'Short URL created successfully'
+          schema:
+            type: 'object'
+            properties:
+              originalUrl:
+                type: 'string'
+                format: 'uri'
+              shortURL:
+                type: 'string'
+        '500':
+          description: 'Internal server error'
+  /{code}:
+    get:
+      summary: 'Redirect to the original URL'
+      parameters:
+        - in: 'path'
+          name: 'code'
+          required: true
+          type: 'string'
+      responses:
+        '302':
+          description: 'Redirecting to the original URL'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
